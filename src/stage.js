@@ -1,5 +1,2 @@
-import React from 'react';
-import { render } from 'react-dom';
+import React from 'react-phaser';
 import App from './stage/components/App';
-
-render(<App/>, document.getElementById('root'));
