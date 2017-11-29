@@ -1,4 +1,10 @@
-h1 {
-  font-family: helvetica;
-  font-weight: 200;
+@import "/node_modules/normalize.css";
+
+.stage {
+  background: #000;
+
+  canvas {
+    border-radius: 12px;
+    margin: 0 auto;
+  }
 }
