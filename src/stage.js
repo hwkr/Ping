@@ -55,6 +55,8 @@ const game = new Phaser.Game(
   },
   update() {
       game.physics.arcade.collide(players, platforms);
+      game.physics.arcade.collide(players);
+
       players.forEach((player) => {
         if (player.body.touching.down) player.body.velocity.x /= 2;
       });
@@ -66,10 +68,11 @@ function addPlayer(playerId) {
   const player = game.add.sprite(200, game.world.height - 200, 'dude');
 
   player.id = playerId;
-  player.power = 10;
+  player.power = 15;
 
   game.physics.arcade.enable(player);
   player.body.bounce.y = 0.2;
+  player.body.bounce.x = 0.2;
   player.body.gravity.y = 300;
   player.body.collideWorldBounds = true;
 

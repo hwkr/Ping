@@ -3,7 +3,13 @@
 .stage {
   background: #000;
   canvas {
-    border-radius: 12px;
+    border-radius: 6px;
     margin: 0 auto;
+  }
+}
+.player {
+  button {
+    width: 33.3333vw;
+    height: 50vh;
   }
 }
