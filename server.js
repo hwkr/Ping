@@ -27,11 +27,19 @@ app.get('/watch', function (request, response) {
   response.sendFile(__dirname + '/dist/stage.html')
 });
 
-io.on('connection', function(client) {
-  console.log('client connected!');
+io.sockets.on('connection', function (socket) {
+  socket.on('subscribe', function(data) {
+    socket.join(data.room);
+  })
+  socket.on('unsubscribe', function(data) { socket.leave(data.room); })
+});
 
-  client.on('join', function(data) {
-    console.log(data);
+io.on('connection', function(socket) {
+  socket.on('join', function(data) {
+    socket.broadcast.to('game').emit('add-player', socket.id);
+  });
+  socket.on('disconnect', (reason) => {
+    socket.broadcast.to('game').emit('remove-player', socket.id);
   });
 });
 

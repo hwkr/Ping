@@ -1,4 +1,4 @@
-import React from 'react-phaser';
+import Phaser from 'phaser';
 
 let socket = io.connect();
 
@@ -8,39 +8,48 @@ const assets = {
   'dude': { type: 'spritesheet', src: require('../../assets/dude.png'), width: 32, height: 48 }
 }
 
-const MyGame = React.createClass({
+const Game = React.createClass({
   getInitialState() {
-    return {};
+    return { players: [] };
   },
 
   componentDidMount() {
+    const component = this;
     socket.on('connect', function (data) {
-      socket.emit('join', 'stage');
+      socket.emit("subscribe", { room: "game" });
     });
+    socket.on('add-player', function(id) {
+      console.log('Add player: ' + id);
+      component.addPlayer(id);
+    })
+    socket.on('remove-player', function(id) {
+      console.log('Remove player: ' + id);
+      component.removePlayer(id);
+    })
+    socket.on('jump-player', function(id, direction) {
+    })
+    this.gameRef = Phaser.GAMES[0];
   },
 
-  onInput(context) {
-    var player = context.nodes.player.obj,
-      cursors = context.input.cursors;
+  addPlayer(playerId) {
+    const players = this.state.players.slice();
+    players.push({id: playerId})
+    this.setState({ players: players })
+  },
 
-    if (cursors.left.isDown) {
-      player.body.velocity.x = -200;
-      player.animations.play('left');
-    } else if (cursors.right.isDown) {
-      player.body.velocity.x = 200;
-      player.animations.play('right');
-    } else {
-      player.body.velocity.x = 0;
-      player.animations.stop();
-      player.frame = 4;
-    }
-
-    if (cursors.up.isDown && player.body.touching.down) {
-      player.body.velocity.y = -500;
-    }
+  removePlayer(playerId) {
+    this.setState({ players: this.state.players.filter(function (_) {
+      return _.id !== playerId;
+    })});
   },
 
   render() {
+    var players = this.state.players.map(function (player, i) {
+      return <sprite key={player.id} x={960} y={540} assetKey="dude"
+        bodyPhysics={true} bodyBounceY={0.2} bodyGravityY={300}
+        bodyCollideWorldBounds={true}>
+      </sprite>
+    });
     return (
       <game assets={assets} width={1920} height={1080} physics={Phaser.Physics.ARCADE}>
         <sprite assetKey="sky" />
@@ -49,17 +58,13 @@ const MyGame = React.createClass({
           <sprite name="ledge1" assetKey="ground" x={400} y={400} bodyImmovable={true} />
           <sprite name="ledge2" assetKey="ground" x={-150} y={250} bodyImmovable={true} />
         </group>
-        <sprite name="player" x={32} y={450} assetKey="dude"
-          bodyPhysics={true} bodyBounceY={0.2} bodyGravityY={300}
-          bodyCollideWorldBounds={true}>
-          <animation id="left" frames={[0, 1, 2, 3]} fps={10} loop={true} />
-          <animation id="right" frames={[5, 6, 7, 8]} fps={10} loop={true} />
-          <collides with="platforms" />
-        </sprite>
-        <input cursors={true} onInput={this.onInput} />
+        <group name="players" enableBody={true}>
+            <collides with="platforms"/>
+            {players}
+        </group>
       </game>
     );
   }
 });
 
-React.render(<MyGame />, 'game');
+React.render(<Game />, 'game');
