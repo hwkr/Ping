@@ -1,15 +1,68 @@
 @import (less) "../../../node_modules/normalize.css/normalize.css";
+@import "../../../node_modules/typicons.font/src/font/typicons.css";
+
+body {
+  background: #111;
+}
 
 .stage {
-  background: #000;
   canvas {
     border-radius: 6px;
     margin: 0 auto;
   }
 }
 .player {
-  button {
-    width: 100%;
-    height: auto;
+
+  .controls {
+    position: relative;
+    width: 90vw;
+    height: 60vw;
+    margin: 20rem auto;
+  }
+  .btn {
+    position: absolute;
+    width: 45vw;
+    height: 30vw;
+
+    border: none;
+    background: none;
+    background-repeat: no-repeat;
+    -webkit-appearance: none;
+    padding: 0;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &.btn-left {
+      left: 0;
+      bottom: 0;
+      background-image: url('../buttons/left.svg');
+      &:hover {
+        background-image: url('../buttons/left-pressed.svg');
+      }
+    }
+    &.btn-right {
+      right: 0;
+      bottom: 0;
+      background-image: url('../buttons/right.svg');
+      &:hover {
+        background-image: url('../buttons/right-pressed.svg');
+      }
+    }
+    &.btn-up {
+      top: 0;
+      width: 30vw;
+      height: 45vw;
+      left: 30vw;
+      background-image: url('../buttons/up.svg');
+      &:hover {
+        background-image: url('../buttons/up-pressed.svg');
+      }
+    }
   }
 }

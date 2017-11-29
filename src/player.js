@@ -20,9 +20,12 @@ const App = React.createClass({
     return (
       <div className="player">
         <div className="controls">
-          <button onClick={this.move} className="btn btn-left" value="left">Left</button>
-          <button onClick={this.move} className="btn btn-up" value="up">Up</button>
-          <button onClick={this.move} className="btn btn-right" value="right">Right</button>
+          <button onClick={this.move} className="btn btn-left" value="left">
+          </button>
+          <button onClick={this.move} className="btn btn-up" value="up">
+          </button>
+          <button onClick={this.move} className="btn btn-right" value="right">
+          </button>
         </div>
       </div>
     );
