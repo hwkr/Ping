@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import './assets/stylesheets/base.scss';
+import './assets/stylesheets/styles.less';
 
 let socket = io.connect();
 
@@ -19,9 +19,11 @@ const App = React.createClass({
   render() {
     return (
       <div className="player">
-        <button onClick={this.move} value="left">Left</button>
-        <button onClick={this.move} value="up">Up</button>
-        <button onClick={this.move} value="right">Right</button>
+        <div className="controls">
+          <button onClick={this.move} className="btn btn-left" value="left">Left</button>
+          <button onClick={this.move} className="btn btn-up" value="up">Up</button>
+          <button onClick={this.move} className="btn btn-right" value="right">Right</button>
+        </div>
       </div>
     );
   }

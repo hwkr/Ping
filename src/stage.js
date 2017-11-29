@@ -1,4 +1,4 @@
-import './assets/stylesheets/base.scss';
+import './assets/stylesheets/styles.less';
 
 const socket = io.connect();
 
