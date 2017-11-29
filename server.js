@@ -41,6 +41,9 @@ io.on('connection', function(socket) {
   socket.on('disconnect', (reason) => {
     socket.broadcast.to('game').emit('remove-player', socket.id);
   });
+  socket.on('move', function(data) {
+    socket.broadcast.to('game').emit('move-player', { id: socket.id, direction: data });
+  });
 });
 
 server.listen(PORT, function(error) {

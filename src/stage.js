@@ -16,6 +16,7 @@ const game = new Phaser.Game(
       game.load.image('sky', require('./assets/sky.png'));
       game.load.image('ground', require('./assets/platform.png'));
       game.load.spritesheet('dude', require('./assets/dude.png'), 32, 48);
+      game.stage.disableVisibilityChange = true;
 
       socket.on('connect', function (data) {
         socket.emit("subscribe", { room: "game" });
@@ -28,7 +29,8 @@ const game = new Phaser.Game(
         console.log('Remove player: ' + id);
         removePlayer(id);
       })
-      socket.on('jump-player', function(id, direction) {
+      socket.on('move-player', function({ id, direction }) {
+        movePlayer(id, direction);
       })
     },
     create() {
@@ -46,15 +48,16 @@ const game = new Phaser.Game(
       ledge.body.immovable = true;
 
       players = game.add.group();
+      console.log(platforms);
 
       //  Our controls.
       cursors = game.input.keyboard.createCursorKeys();
   },
   update() {
-
-        //  Collide the player and the stars with the platforms
-        game.physics.arcade.collide(players, platforms);
-
+      game.physics.arcade.collide(players, platforms);
+      players.forEach((player) => {
+        if (player.body.touching.down) player.body.velocity.x /= 2;
+      });
     }
   });
 
@@ -63,6 +66,7 @@ function addPlayer(playerId) {
   const player = game.add.sprite(200, game.world.height - 200, 'dude');
 
   player.id = playerId;
+  player.power = 10;
 
   game.physics.arcade.enable(player);
   player.body.bounce.y = 0.2;
@@ -75,4 +79,18 @@ function addPlayer(playerId) {
 function removePlayer(playerId) {
   const player = players.children.find((e) => e.id === playerId );
   if (player) player.kill();
+}
+
+function movePlayer(playerId, direction) {
+  const player = players.children.find((e) => e.id === playerId );
+  if (!player) {
+    addPlayer(playerId);
+    return;
+  }
+  if (player.body.touching.down)
+  {
+    if (direction === 'right') player.body.velocity.x = 10*player.power;
+    if (direction === 'left') player.body.velocity.x = -10*player.power;
+    player.body.velocity.y = -20*player.power;
+  }
 }
