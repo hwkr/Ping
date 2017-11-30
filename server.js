@@ -44,6 +44,9 @@ io.on('connection', function(socket) {
   socket.on('move', function(data) {
     socket.broadcast.to('game').emit('move-player', { id: socket.id, direction: data });
   });
+  socket.on('score', function(data) {
+    socket.to(data.id).emit('score', { score: data.score });
+  });
 });
 
 server.listen(PORT, function(error) {

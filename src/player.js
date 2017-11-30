@@ -14,8 +14,12 @@ const App = React.createClass({
   },
 
   componentDidMount() {
+    const t = this;
     socket.on('connect', function (data) {
       socket.emit('join', 'Player connected!');
+    });
+    socket.on('score', function (data) {
+      t.setState({ score: data.score });
     });
   },
 

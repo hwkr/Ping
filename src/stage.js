@@ -108,6 +108,8 @@ function addPlayer(playerId) {
   player.body.gravity.y = 300;
   player.body.collideWorldBounds = true;
 
+  socket.emit("score", { id: player.id, score: player.power });
+
   players.add(player);
 }
 
@@ -136,19 +138,25 @@ function movePlayer(playerId, direction) {
 
 function givePoint(player) {
   player.jumping = false;
-  const playerMax = powerMax * ((player.advantage + 1) / 4);
+  const playerMax = Math.round(powerMax * ((player.advantage + 1) / 4));
 
-  console.log(`${player.id}: ${player.power}`)
-  if(player.power >= playerMax){
-    player.power = playerMax;
-    if (player.power === powerMax) {
-      player.loadTexture('player_max', 0, false);
-    }
-  } else if ( player.y <= 310) {
+  if (player.y <= 310 && player.power < playerMax) {
+
     player.power += 1 + 3*game.rnd.integerInRange(0, player.advantage);
+
+    if(player.power >= playerMax){
+      player.power = playerMax;
+      if (player.power === powerMax) {
+        socket.emit("score", { id: player.id, score: 'MAX' });
+        player.loadTexture('player_max', 0, false);
+      } else {
+        socket.emit("score", { id: player.id, score: playerMax });
+      }
+    } else {
+      socket.emit("score", { id: player.id, score: player.power });
+    }
     powerupEffect(player.x, player.y);
   }
-
 }
 
 function powerupEffect(x,y){
