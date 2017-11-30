@@ -1,4 +1,5 @@
 import './assets/stylesheets/styles.less';
+import tileMap from '!json-loader!./assets/environment/map.json';
 
 const socket = io.connect();
 
@@ -52,8 +53,9 @@ const game = new Phaser.Game(
       map.addTilesetImage('tileset', 'tileset');
       layers.background = map.createLayer('Background');
       layers.ground = map.createLayer('Ground');
-      layers.platforms = map.createLayer('Platforms');
       layers.decorations = map.createLayer('Decoration');
+
+      map.setCollisionBetween(1, 1000, true, layers.ground);
       layers.background.resizeWorld();
 
       players = game.add.group();
@@ -69,21 +71,23 @@ const game = new Phaser.Game(
       game.physics.arcade.collide(players);
 
       players.forEach((player) => {
-        if (player.body.touching.down) player.body.velocity.x /= 2;
+        if (player.body.onFloor()) player.body.velocity.x /= 2;
       });
     }
-  });
+  }
+);
+
 
 
 function addPlayer(playerId) {
-  const player = game.add.sprite(200, game.world.height - 200, 'dude');
+  const player = game.add.sprite(game.world.width / 2, game.world.height - 100, 'dude');
 
   player.id = playerId;
-  player.power = 15;
+  player.power = 10;
 
   game.physics.arcade.enable(player);
-  player.body.bounce.y = 0.2;
-  player.body.bounce.x = 0.2;
+  player.body.bounce.y = 0.5;
+  player.body.bounce.x = 0.5;
   player.body.gravity.y = 300;
   player.body.collideWorldBounds = true;
 
@@ -101,10 +105,10 @@ function movePlayer(playerId, direction) {
     addPlayer(playerId);
     return;
   }
-  if (player.body.touching.down)
+  if (direction === 'right') player.body.velocity.x = 10*player.power;
+  if (direction === 'left') player.body.velocity.x = -10*player.power;
+  if (player.body.onFloor())
   {
-    if (direction === 'right') player.body.velocity.x = 10*player.power;
-    if (direction === 'left') player.body.velocity.x = -10*player.power;
-    player.body.velocity.y = -20*player.power;
+    player.body.velocity.y = -15*player.power;
   }
 }
