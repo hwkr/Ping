@@ -96,7 +96,7 @@ const game = new Phaser.Game(
 
 function addPlayer(playerId) {
   const advantage = game.rnd.integerInRange(0, 3)
-  const player = game.add.sprite(game.world.width / 2, game.world.height - 100, `player_${advantage}`);
+  const player = game.add.sprite(game.world.width / 2 + game.rnd.integerInRange(-100, 100), game.world.height - 100, `player_${advantage}`);
 
   player.id = playerId;
   player.power = 5 * advantage;
