@@ -34,7 +34,7 @@ const game = new Phaser.Game(
       game.load.tilemap('map', require('./assets/environment/map.json'), null, Phaser.Tilemap.TILED_JSON);
 
       game.load.audio('jumpSound', require('./assets/sounds/jump.mp3'));
-      game.load.audio('powerupSound', require('./assets/sounds/powerUp.mp3'));
+      game.load.audio('powerupSound', require('./assets/sounds/powerup.mp3'));
 
 
       socket.on('connect', function (data) {
