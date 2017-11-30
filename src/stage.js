@@ -33,6 +33,10 @@ const game = new Phaser.Game(
       game.load.image('tileset', require('./assets/environment/tileset.png'));
       game.load.tilemap('map', require('./assets/environment/map.json'), null, Phaser.Tilemap.TILED_JSON);
 
+      game.load.audio('jumpSound', require('./assets/sounds/jump.mp3'));
+      game.load.audio('powerupSound', require('./assets/sounds/powerUp.mp3'));
+
+
       socket.on('connect', function (data) {
         socket.emit("subscribe", { room: "game" });
       });
@@ -132,6 +136,10 @@ function movePlayer(playerId, direction) {
     if (direction === 'right') player.body.velocity.x = 100;
     if (direction === 'left') player.body.velocity.x = -100;
     player.body.velocity.y = -1 * (160 + player.power);
+
+    const sound = game.add.audio('jumpSound');
+    sound.play();
+
     player.jumping = true;
   }
 }
@@ -162,7 +170,11 @@ function givePoint(player) {
 function powerupEffect(x,y){
   const powerup = game.add.sprite(x, y, 'powerup');
   const anim = powerup.animations.add('powerup');
+  const sound = game.add.audio('powerupSound');
+
   powerup.animations.play('powerup');
+  sound.play();
+
   anim.onComplete.add(function () {
     powerup.kill();
   }, this);
