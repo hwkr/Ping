@@ -6,8 +6,15 @@ import './assets/stylesheets/styles.less';
 let socket = io.connect();
 
 const App = React.createClass({
+
+  getInitialState() {
+    return {
+      score: 0
+    };
+  },
+
   componentDidMount() {
-    socket.on('connect', function(data) {
+    socket.on('connect', function (data) {
       socket.emit('join', 'Player connected!');
     });
   },
@@ -19,6 +26,9 @@ const App = React.createClass({
   render() {
     return (
       <div className="player">
+        <h1 className="score">
+          {this.state.score}
+        </h1>
         <div className="controls">
           <button onClick={this.move} className="btn btn-left" value="left">
           </button>
@@ -32,4 +42,4 @@ const App = React.createClass({
   }
 });
 
-render(<App/>, document.getElementById('root'));
+render(<App />, document.getElementById('root'));

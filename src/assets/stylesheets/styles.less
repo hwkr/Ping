@@ -16,12 +16,18 @@ body {
   }
 }
 .player {
+  .score {
+    text-align: center;
+    color: #fff;
+    font-size: 32vw;
+    font-family: 'VT323', monospace;
+  }
 
   .controls {
     position: relative;
     width: 90vw;
     height: 60vw;
-    margin: 20rem auto;
+    margin: 0 auto;
   }
   .btn {
     position: absolute;
@@ -32,6 +38,13 @@ body {
     background: none;
     background-repeat: no-repeat;
     -webkit-appearance: none;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     padding: 0;
 
     &:hover {
@@ -46,7 +59,7 @@ body {
       left: 0;
       bottom: 0;
       background-image: url('../buttons/left.svg');
-      &:hover {
+      &:active {
         background-image: url('../buttons/left-pressed.svg');
       }
     }
@@ -54,7 +67,7 @@ body {
       right: 0;
       bottom: 0;
       background-image: url('../buttons/right.svg');
-      &:hover {
+      &:active {
         background-image: url('../buttons/right-pressed.svg');
       }
     }
@@ -64,7 +77,7 @@ body {
       height: 45vw;
       left: 30vw;
       background-image: url('../buttons/up.svg');
-      &:hover {
+      &:active {
         background-image: url('../buttons/up-pressed.svg');
       }
     }

@@ -11,7 +11,7 @@ let players,
 
 const gameWidth = 640;
 const gameHeight = 480;
-const powerMax = 80;
+const powerMax = 90;
 
 const game = new Phaser.Game(
   gameWidth, gameHeight,
@@ -136,10 +136,11 @@ function movePlayer(playerId, direction) {
 
 function givePoint(player) {
   player.jumping = false;
+  const playerMax = powerMax * ((player.advantage + 1) / 4);
 
   console.log(`${player.id}: ${player.power}`)
-  if(player.power >= (powerMax / (4 - player.advantage))){
-    player.power = (powerMax / (4 - player.advantage));
+  if(player.power >= playerMax){
+    player.power = playerMax;
     if (player.power === powerMax) {
       player.loadTexture('player_max', 0, false);
     }
