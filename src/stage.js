@@ -11,7 +11,7 @@ let players,
 
 const gameWidth = 640;
 const gameHeight = 480;
-const powerMax = 60;
+const powerMax = 80;
 
 const game = new Phaser.Game(
   gameWidth, gameHeight,
@@ -20,7 +20,11 @@ const game = new Phaser.Game(
   {
     preload() {
 
-      game.load.spritesheet('pink', require('./assets/players/pink.png'), 24, 16);
+      game.load.spritesheet('player_0', require('./assets/players/green.png'), 24, 16);
+      game.load.spritesheet('player_1', require('./assets/players/blue.png'), 24, 16);
+      game.load.spritesheet('player_2', require('./assets/players/purple.png'), 24, 16);
+      game.load.spritesheet('player_3', require('./assets/players/pink.png'), 24, 16);
+      game.load.spritesheet('player_max', require('./assets/players/gold.png'), 24, 16);
       game.load.spritesheet('powerup', require('./assets/effects/powerup.png'), 30, 30);
       game.load.spritesheet('death', require('./assets/effects/death.png'), 40, 40);
 
@@ -91,10 +95,12 @@ const game = new Phaser.Game(
 
 
 function addPlayer(playerId) {
-  const player = game.add.sprite(game.world.width / 2, game.world.height - 100, 'pink');
+  const advantage = game.rnd.integerInRange(0, 3)
+  const player = game.add.sprite(game.world.width / 2, game.world.height - 100, `player_${advantage}`);
 
   player.id = playerId;
-  player.power = 0;
+  player.power = 5 * advantage;
+  player.advantage = advantage;
 
   game.physics.arcade.enable(player);
   player.body.bounce.y = 0.4;
@@ -130,10 +136,18 @@ function movePlayer(playerId, direction) {
 
 function givePoint(player) {
   player.jumping = false;
-  if( player.y <= 310 && player.power < powerMax){
-    player.power += 5;
+
+  console.log(`${player.id}: ${player.power}`)
+  if(player.power >= (powerMax / (4 - player.advantage))){
+    player.power = (powerMax / (4 - player.advantage));
+    if (player.power === powerMax) {
+      player.loadTexture('player_max', 0, false);
+    }
+  } else if ( player.y <= 310) {
+    player.power += 1 + 3*game.rnd.integerInRange(0, player.advantage);
     powerupEffect(player.x, player.y);
   }
+
 }
 
 function powerupEffect(x,y){
