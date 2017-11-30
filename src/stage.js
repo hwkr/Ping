@@ -56,7 +56,7 @@ const game = new Phaser.Game(
       layers.decorations = map.createLayer('Decoration');
 
       map.setCollisionBetween(1, 1000, true, layers.ground);
-      setTileCollision(layers.ground, [ 262, 366, 368, 370 ], { top: true, bottom: false, left: false, right: false });
+      setTileCollision(layers.ground, [ 35, 36, 134, 135, 262, 366, 368, 370 ], { top: true, bottom: false, left: false, right: false });
 
       layers.background.resizeWorld();
 
