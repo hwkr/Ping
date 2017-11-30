@@ -19,7 +19,7 @@ const game = new Phaser.Game(
   {
     preload() {
 
-      game.load.spritesheet('dude', require('./assets/dude.png'), 32, 48);
+      game.load.spritesheet('pink', require('./assets/players/pink.png'), 24, 16);
 
       game.load.image('background', require('./assets/environment/back.png'));
       game.load.image('middleground', require('./assets/environment/middle.png'));
@@ -56,7 +56,7 @@ const game = new Phaser.Game(
       layers.decorations = map.createLayer('Decoration');
 
       map.setCollisionBetween(1, 1000, true, layers.ground);
-      setTileCollision(layers.ground, [ 35, 36, 134, 135, 262, 366, 368, 370 ], { top: true, bottom: false, left: false, right: false });
+      setTileCollision(layers.ground, [ 29, 35, 36, 134, 135, 262, 366, 368, 370 ], { top: true, bottom: false, left: false, right: false });
 
       layers.background.resizeWorld();
 
@@ -73,7 +73,12 @@ const game = new Phaser.Game(
       game.physics.arcade.collide(players);
 
       players.forEach((player) => {
-        if (player.body.onFloor()) player.body.velocity.x /= 2;
+        if (player.body.onFloor()){
+          player.frame = 0;
+          player.body.velocity.x /= 2;
+        } else {
+          player.frame = 1;
+        }
       });
     }
   }
@@ -82,14 +87,14 @@ const game = new Phaser.Game(
 
 
 function addPlayer(playerId) {
-  const player = game.add.sprite(game.world.width / 2, game.world.height - 300, 'dude');
+  const player = game.add.sprite(game.world.width / 2, game.world.height - 100, 'pink');
 
   player.id = playerId;
-  player.power = 10;
+  player.power = 0;
 
   game.physics.arcade.enable(player);
-  player.body.bounce.y = 0.5;
-  player.body.bounce.x = 0.5;
+  player.body.bounce.y = 0.4;
+  player.body.bounce.x = 0.2;
   player.body.gravity.y = 300;
   player.body.collideWorldBounds = true;
 
@@ -107,11 +112,11 @@ function movePlayer(playerId, direction) {
     addPlayer(playerId);
     return;
   }
-  if (direction === 'right') player.body.velocity.x = 10*player.power;
-  if (direction === 'left') player.body.velocity.x = -10*player.power;
   if (player.body.onFloor())
   {
-    player.body.velocity.y = -20*player.power;
+    if (direction === 'right') player.body.velocity.x = 100;
+    if (direction === 'left') player.body.velocity.x = -100;
+    player.body.velocity.y = -1 * (160 + 10*player.power);
   }
 }
 
