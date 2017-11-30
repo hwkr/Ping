@@ -11,6 +11,7 @@ let players,
 
 const gameWidth = 640;
 const gameHeight = 480;
+const powerMax = 60;
 
 const game = new Phaser.Game(
   gameWidth, gameHeight,
@@ -20,6 +21,8 @@ const game = new Phaser.Game(
     preload() {
 
       game.load.spritesheet('pink', require('./assets/players/pink.png'), 24, 16);
+      game.load.spritesheet('powerup', require('./assets/effects/powerup.png'), 30, 30);
+      game.load.spritesheet('death', require('./assets/effects/death.png'), 40, 40);
 
       game.load.image('background', require('./assets/environment/back.png'));
       game.load.image('middleground', require('./assets/environment/middle.png'));
@@ -76,6 +79,7 @@ const game = new Phaser.Game(
         if (player.body.onFloor()){
           player.frame = 0;
           player.body.velocity.x /= 2;
+          if (player.jumping) givePoint(player);
         } else {
           player.frame = 1;
         }
@@ -103,7 +107,10 @@ function addPlayer(playerId) {
 
 function removePlayer(playerId) {
   const player = players.children.find((e) => e.id === playerId );
-  if (player) player.kill();
+  if (player){
+    deathEffect(player.x, player.y);
+    player.kill();
+  }
 }
 
 function movePlayer(playerId, direction) {
@@ -116,8 +123,36 @@ function movePlayer(playerId, direction) {
   {
     if (direction === 'right') player.body.velocity.x = 100;
     if (direction === 'left') player.body.velocity.x = -100;
-    player.body.velocity.y = -1 * (160 + 10*player.power);
+    player.body.velocity.y = -1 * (160 + player.power);
+    player.jumping = true;
   }
+}
+
+function givePoint(player) {
+  player.jumping = false;
+  if( player.y <= 310 && player.power < powerMax){
+    player.power += 5;
+    powerupEffect(player.x, player.y);
+  }
+}
+
+function powerupEffect(x,y){
+  const powerup = game.add.sprite(x, y, 'powerup');
+  const anim = powerup.animations.add('powerup');
+  powerup.animations.play('powerup');
+  anim.onComplete.add(function () {
+    powerup.kill();
+  }, this);
+}
+
+function deathEffect(x,y){
+  const death = game.add.sprite(x, y, 'death');
+  death.anchor.setTo(0.5);
+  const anim = death.animations.add('death');
+  death.animations.play('death');
+  anim.onComplete.add(function () {
+    death.kill();
+  }, this);
 }
 
 function setTileCollision(mapLayer, idxOrArray, dirs) {
