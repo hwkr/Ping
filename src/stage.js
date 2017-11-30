@@ -3,20 +3,27 @@ import './assets/stylesheets/styles.less';
 const socket = io.connect();
 
 let players,
-    platforms,
-    cursors;
+    middleground,
+    background,
+    layers = {},
+    map;
+
+const gameWidth = 640;
+const gameHeight = 480;
 
 const game = new Phaser.Game(
-  800, 600,
+  gameWidth, gameHeight,
   Phaser.AUTO,
   'game',
   {
     preload() {
 
-      game.load.image('sky', require('./assets/sky.png'));
-      game.load.image('ground', require('./assets/platform.png'));
       game.load.spritesheet('dude', require('./assets/dude.png'), 32, 48);
-      game.stage.disableVisibilityChange = true;
+
+      game.load.image('background', require('./assets/environment/back.png'));
+      game.load.image('middleground', require('./assets/environment/middle.png'));
+      game.load.image('tileset', require('./assets/environment/tileset.png'));
+      game.load.tilemap('map', require('./assets/environment/map.json'), null, Phaser.Tilemap.TILED_JSON);
 
       socket.on('connect', function (data) {
         socket.emit("subscribe", { room: "game" });
@@ -35,26 +42,30 @@ const game = new Phaser.Game(
     },
     create() {
       game.physics.startSystem(Phaser.Physics.ARCADE);
-      game.add.sprite(0, 0, 'sky');
 
-      platforms = game.add.group();
-      platforms.enableBody = true;
-      var ground = platforms.create(0, game.world.height - 64, 'ground');
-      ground.scale.setTo(2, 2);
-      ground.body.immovable = true;
-      var ledge = platforms.create(400, 400, 'ground');
-      ledge.body.immovable = true;
-      ledge = platforms.create(-150, 250, 'ground');
-      ledge.body.immovable = true;
+      // world background
+      background = game.add.tileSprite(0, 0, gameWidth, gameHeight, 'background');
+      middleground = game.add.tileSprite(0, 120, gameWidth, gameHeight, 'middleground');
+
+      // world tiles
+      map = game.add.tilemap('map');
+      map.addTilesetImage('tileset', 'tileset');
+      layers.background = map.createLayer('Background');
+      layers.ground = map.createLayer('Ground');
+      layers.platforms = map.createLayer('Platforms');
+      layers.decorations = map.createLayer('Decoration');
+      layers.background.resizeWorld();
 
       players = game.add.group();
-      console.log(platforms);
 
-      //  Our controls.
-      cursors = game.input.keyboard.createCursorKeys();
+      game.scale.pageAlignHorizontally = true;
+      game.scale.pageAlignVertically = true;
+      game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+      game.stage.disableVisibilityChange = true;
+      game.renderer.renderSession.roundPixels = true; // no blurring
   },
   update() {
-      game.physics.arcade.collide(players, platforms);
+      game.physics.arcade.collide(players, layers.ground);
       game.physics.arcade.collide(players);
 
       players.forEach((player) => {
