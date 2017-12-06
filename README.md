@@ -1,19 +1,33 @@
-# React + Websocket Starter (for [Heroku](https://www.heroku.com/) deployment)
+# Ping
 
-### UP & RUNNING
+This game was created for UVic ART 261 Fall 2017. It explores privilege through the context of a video game.
+
+## Screenshots
+
+### Stage view
+
+![Stage view](./assets/stage1.png)
+
+![Stage view](./assets/stage2.png)
+
+![Stage view](./assets/stage3.png)
+
+### Player Controls on Phone
+
+![Player view](./assets/player.png)
+
+## Getting Started
+
+### Up and Running
 * `npm install`
 * `npm start`
 * visit `http://localhost:8080/`
 
-### DEPLOYING TO HEROKU
-This app is set up for deployment to Heroku!
+### Deploying to Heroku
 
-Heroku will follow the `postinstall` command in your `package.json` and compile assets with `webpack.prod.config.js`. It runs the Express web server in `server.js`. You'll notice there's a special section set up for running in development.
+* `git push heroku master`
 
-If you've never deployed a Node app to Heroku (or just need a refresher), they have a really great walkthrough [here](https://devcenter.heroku.com/articles/getting-started-with-nodejs#introduction).
+# Attributions
 
-### OTHER STARTERS
-* [React + Node Starter ](https://github.com/alanbsmith/react-node-example)
-* [ Marc Garreau's Redux Starter ](https://github.com/marcgarreau/redux-starter)
-* [ React + Electron Starter ](https://github.com/alanbsmith/react-electron-starter)
-* [ React + Sinatra Example ](https://github.com/alanbsmith/react-sinatra-example)
+* Built with [Phaser](https://phaser.io/)
+* Background tileset by [Ansimuz](https://opengameart.org/users/ansimuz)

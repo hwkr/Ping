@@ -1,7 +1,7 @@
 {
-  "name": "react-websocket-starter",
+  "name": "ping",
   "version": "0.1.0",
-  "description": "starter app for using react with socket.io",
+  "description": "A game for UVic ART 261",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
