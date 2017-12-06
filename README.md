@@ -27,7 +27,7 @@ This game was created for UVic ART 261 Fall 2017. It explores privilege through 
 
 * `git push heroku master`
 
-# Attributions
+## Attributions
 
 * Built with [Phaser](https://phaser.io/)
 * Background tileset by [Ansimuz](https://opengameart.org/users/ansimuz)
